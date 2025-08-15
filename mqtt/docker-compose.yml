@@ -1,0 +1,13 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto_broker
+    restart: unless-stopped
+    ports:
+      - "1883:1883"   # Puerto MQTT estándar
+      - "9000:9001"  # WebSockets
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    command: [ "/bin/sh", "-c","mosquitto_passwd -b /mosquitto/config/passwords.txt mqtt_admin mqtt_admin_pass && \ mosquitto_passwd -b /mosquitto/config/passwords.txt mqtt_gestor mqtt_gestor_pass && \ mosquitto_passwd -b /mosquitto/config/passwords.txt mqtt_invitado mqtt_invitado_pass && \ mosquitto -c /mosquitto/config/mosquitto.conf" ]

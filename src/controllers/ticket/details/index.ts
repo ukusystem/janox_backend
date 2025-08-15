@@ -1,0 +1,6 @@
+export * from "./getFotoActividadPersonal"
+export * from "./downloadArchivo"
+export * from "./updateArchivoRespaldo"
+export * from "./getTicketDetalles"
+export * from "./downloadPdfDetalles"
+export * from "./downloadFotoActividadPersonal"

@@ -1,0 +1,14 @@
+# ==== ConfiguraciÃ³n de Control de Acceso (ACL) para Mosquitto ====
+
+# El usuario administrador tiene acceso completo a todos los topics.
+user admin
+topic readwrite #
+
+# El usuario con rol de gestor solo puede leer notificaciones especÃ­ficas.
+user manager
+topic read notifications/admin
+
+
+# El usuario invitado solo puede leer notificaciones dentro del topic "contrata".
+user invited
+topic read notifications/contrata/#

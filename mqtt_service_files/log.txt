@@ -1,0 +1,14 @@
+1755093280: mosquitto version 2.0.22 starting
+1755093280: Config loaded from C:\Users\hansg\Documents\git\uku_backend\mqtt_service_files\janox-mosquitto-win.conf.
+1755093280: Opening ipv6 listen socket on port 1883.
+1755093280: Opening ipv4 listen socket on port 1883.
+1755093280: Opening websockets listen socket on port 9000.
+1755093280: mosquitto version 2.0.22 running
+1755093293: mosquitto version 2.0.22 terminating
+1755093298: mosquitto version 2.0.22 starting
+1755093298: Config loaded from C:\Users\hansg\Documents\git\uku_backend\mqtt_service_files\janox-mosquitto-win.conf.
+1755093298: Opening ipv6 listen socket on port 1883.
+1755093298: Opening ipv4 listen socket on port 1883.
+1755093298: Opening websockets listen socket on port 9000.
+1755093298: mosquitto version 2.0.22 running
+1755093329: mosquitto version 2.0.22 terminating
