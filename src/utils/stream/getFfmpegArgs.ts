@@ -3,7 +3,6 @@ import { genericLogger } from '../../services/loggers';
 import { getRstpLinksByCtrlIdAndCmrId } from '../getCameraRtspLinks';
 
 type Calidad = 'q1' | 'q2' | 'q3';
-const TIMEOUT_DISCONNECT_STREAM: number = 5;
 
 export const getFfmpegArgs = async (ctrl_id: number, cmr_id: number, q: Calidad) => {
   try {
@@ -17,61 +16,44 @@ export const getFfmpegArgs = async (ctrl_id: number, cmr_id: number, q: Calidad)
     let ffmpegArg: string[] = [];
     if (q === 'q1') {
       ffmpegArg = [
-        '-rtsp_transport',
-        'tcp',
-        // SE ELIMINA LA LÍNEA '-timeout' QUE CAUSA EL ERROR
-        '-i',
-        rtspUrl,
-        '-r',
-        `${controller.streamprimaryfps}`,
+        '-rtsp_transport', 'tcp',
+        '-i', rtspUrl,
+        '-r', `${controller.streamprimaryfps}`,
         '-an',
-        '-vf',
-        `scale=${resolution.stream_pri.ancho}:${resolution.stream_pri.altura}`,
-        '-c:v',
-        'mjpeg',
-        '-f',
-        'image2pipe',
-        '-',
+        '-vf', `scale=${resolution.stream_pri.ancho}:${resolution.stream_pri.altura}`,
+        '-c:v', 'mjpeg',
+        '-f', 'image2pipe',
+        'pipe:1',
       ];
     }
     if (q === 'q2') {
       ffmpegArg = [
-        '-rtsp_transport',
-        'tcp',
-        // SE ELIMINA LA LÍNEA '-timeout' QUE CAUSA EL ERROR
-        '-i',
-        rtspUrl,
-        '-r',
-        `${controller.streamsecondaryfps}`,
+        '-rtsp_transport', 'tcp',
+        '-i', rtspUrl,
+        '-r', `${controller.streamsecondaryfps}`,
         '-an',
-        '-vf',
-        `scale=${resolution.stream_sec.ancho}:${resolution.stream_sec.altura}`,
-        '-c:v',
-        'mjpeg',
-        '-b:v',
-        '2M',
-        '-f',
-        'image2pipe',
-        '-',
+        '-vf', `scale=${resolution.stream_sec.ancho}:${resolution.stream_sec.altura}`,
+        '-c:v', 'mjpeg',
+        '-b:v', '2M',
+        '-f', 'image2pipe',
+        'pipe:1',
       ];
     }
     if (q === 'q3') {
       ffmpegArg = [
-        '-rtsp_transport',
-        'tcp',
-        // SE ELIMINA LA LÍNEA '-timeout' QUE CAUSA EL ERROR
-        '-i',
-        rtspUrlsub,
+        '-rtsp_transport', 'tcp',
+        '-i', rtspUrlsub,
         '-an',
-        '-c:v',
-        'copy',
-        '-f',
-        'image2pipe',
-        '-',
+        '-c:v', 'copy',
+        '-f', 'image2pipe',
+        'pipe:1',
       ];
     }
     return ffmpegArg;
   } catch (error) {
+    console.error('--- ERROR DETALLADO EN getFfmpegArgs ---');
+    console.error(error);
+    console.error('-----------------------------------------');
     genericLogger.error(`Error en getFfmpegArgs`, error);
     throw error;
   }

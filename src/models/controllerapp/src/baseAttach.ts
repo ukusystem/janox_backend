@@ -2714,7 +2714,6 @@ export class ManagerAttach extends BaseAttach {
    */
   
   
-
 private async createDatabaseForNode(nodeID: number): Promise<boolean> {
     const newNodeDBName = BaseAttach.getNodeDBName(nodeID);
 
@@ -2725,13 +2724,14 @@ private async createDatabaseForNode(nodeID: number): Promise<boolean> {
     }
 
     const { user, password, port } = appConfig.db;
-
+    
     const dumpCommand = `mysqldump -u ${user} -p${password} --protocol=TCP -P ${port} nodo`;
     const importCommand = `mysql -u ${user} -p${password} --protocol=TCP -P ${port} ${newNodeDBName}`;
 
     const fullCommand = process.platform === 'win32'
-        ? `cmd.exe /c "${dumpCommand} | ${importCommand}"` // Windows
-        : `${dumpCommand} | ${importCommand}`;             //Linux
+        ? `cmd.exe /c "${dumpCommand} | ${importCommand}"`
+        : `${dumpCommand} | ${importCommand}`;
+
     try {
         await new Promise<void>((resolve, reject) => {
             cp.exec(fullCommand, { timeout: BaseAttach.PROCESS_TIMEOUT }, (error, stdout, stderr) => {
@@ -2751,7 +2751,7 @@ private async createDatabaseForNode(nodeID: number): Promise<boolean> {
     } catch (e) {
         return false;
     }
-}
+  }
 
   /**
    * Ensure that the controller has a channel registered AFTER a
