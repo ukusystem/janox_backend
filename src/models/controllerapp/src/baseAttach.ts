@@ -11,6 +11,7 @@ import { Message } from './message';
 import { Bundle } from './bundle';
 import { Logger } from './logger';
 import { Mortal } from './mortal';
+
 // import { SystemManager } from "@models/system";
 import { SystemManager } from '../../../models/system';
 // import { appConfig } from "@configs/index";
@@ -2711,49 +2712,46 @@ export class ManagerAttach extends BaseAttach {
    * @param nodeID The node ID for which create the database.
    * @returns True if the database was created, false if an error occurred.
    */
-  private async createDatabaseForNode(nodeID: number): Promise<boolean> {
-    /**
-     * Try to create a database.
-     */
-    if (Main.isWindows) {
-      const dbRes = await executeQuery<ResultSetHeader>(BaseAttach.formatQueryWithNode(queries.createDatabase, nodeID));
-      if (!dbRes) {
+  
+  
+
+private async createDatabaseForNode(nodeID: number): Promise<boolean> {
+    const newNodeDBName = BaseAttach.getNodeDBName(nodeID);
+
+    const dbRes = await executeQuery<ResultSetHeader>(BaseAttach.formatQueryWithNode(queries.createDatabase, nodeID));
+    if (!dbRes) {
+        this._log(`ERROR: No se pudo crear la base de datos para el nodo ID ${nodeID}.`);
         return false;
-      }
-      const newNode = BaseAttach.getNodeDBName(nodeID);
-      // The timeout generates an error in the callback?
-      try {
-        cp.execSync(
-          `cmd.exe /c mysqldump -u ${appConfig.db.user} -p${appConfig.db.password} --protocol=TCP -P ${appConfig.db.port} nodo | mysql -u ${appConfig.db.user} -p${appConfig.db.password} --protocol=TCP -P ${appConfig.db.port} ${newNode}`,
-          // mysqldump -u root -padmin --protocol=TCP -P 3307 nodo | mysql -u root -padmin --protocol=TCP -P 3307 nodo1
-          { timeout: BaseAttach.PROCESS_TIMEOUT },
-        );
-      } catch (e) {
-        this._log(`ERROR: Could not create database for node ID ${nodeID}. Error:\n ${e}.`);
-        return false;
-      }
-    } else {
-      this._log(`Database creation only implemented for Windows.`);
-      return false;
     }
 
-    /**
-     * Ensure tables for temperatures AFTER the table for the node exists.
-     */
-    // const year = useful.getYear();
-    // const month = useful.getMonth();
-    // if (!month || !year) {
-    //   this._log(`ERROR: Could not get the month or year for node ${nodeID}.`);
-    //   return false;
-    // }
-    // if (!(await BaseAttach._checkTablesStatic(nodeID, month, year, true))) {
-    //   this._log(`ERROR: Could not create temperature table for node ID ${nodeID}`);
-    //   return false;
-    // }
-    // this._log(`Database created for node ID ${nodeID}.`);
+    const { user, password, port } = appConfig.db;
 
-    return true;
-  }
+    const dumpCommand = `mysqldump -u ${user} -p${password} --protocol=TCP -P ${port} nodo`;
+    const importCommand = `mysql -u ${user} -p${password} --protocol=TCP -P ${port} ${newNodeDBName}`;
+
+    const fullCommand = process.platform === 'win32'
+        ? `cmd.exe /c "${dumpCommand} | ${importCommand}"` // Windows
+        : `${dumpCommand} | ${importCommand}`;             //Linux
+    try {
+        await new Promise<void>((resolve, reject) => {
+            cp.exec(fullCommand, { timeout: BaseAttach.PROCESS_TIMEOUT }, (error, stdout, stderr) => {
+                if (error) {
+                    this._log(`ERROR: No se pudo clonar la base de datos para el nodo ID ${nodeID}. Error:\n ${error.message}`);
+                    if (stderr) {
+                        this._log(`stderr: ${stderr}`);
+                    }
+                    return reject(error);
+                }
+                resolve();
+            });
+        });
+
+        this._log(`Base de datos creada y clonada para el nodo ID ${nodeID}.`);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
 
   /**
    * Ensure that the controller has a channel registered AFTER a
