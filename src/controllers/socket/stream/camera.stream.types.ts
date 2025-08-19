@@ -1,4 +1,4 @@
-import { ChildProcessByStdio } from 'child_process';
+import { ChildProcess } from 'child_process';
 
 export enum CamStreamQuality {
   Primary = 'q1',
@@ -18,7 +18,7 @@ export interface ICamStreamFfmpegProcess {
     [cmr_id: number]: {
       [q: string]: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        ffmpegProcess: ChildProcessByStdio<null, any, null>;
+        ffmpegProcess: ChildProcess; // Se usa el tipo genérico ChildProcess.
         isChunkInFrame: boolean;
         bufferFrame: Buffer;
       };

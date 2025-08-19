@@ -126,121 +126,95 @@ export class CamStreamSocketManager {
     return undefined;
   }
 
-  static async createProccess(direction: CamStreamDirection) {
+static async createProccess(direction: CamStreamDirection) {
     const { ctrl_id, cmr_id, q } = direction;
 
-    setTimeout(async () => {
-      // esperar un tiempo -> correcto cierre de procesos
+    // Se verifica si ya existe un proceso para no duplicarlo.
+    if (CamStreamSocketManager.process[ctrl_id]?.[cmr_id]?.[q]) {
+        vmsLogger.info(`Proceso FFmpeg para cmr_id ${cmr_id} y calidad ${q} ya existe. Saltando creación.`);
+        return;
+    }
 
-      if (!CamStreamSocketManager.process[ctrl_id]) {
-        CamStreamSocketManager.process[ctrl_id] = {};
-      }
+    try {
+        CamStreamSocketManager.notifyState(direction, true, 'isLoading');
 
-      if (!CamStreamSocketManager.process[ctrl_id][cmr_id]) {
-        CamStreamSocketManager.process[ctrl_id][cmr_id] = {};
-      }
+        const ffmpegPath = '/usr/bin/ffmpeg'; // Asegúrate que esta es la ruta correcta de 'which ffmpeg'
+        const ffmpegArgs = await getFfmpegArgs(ctrl_id, cmr_id, q);
 
-      if (!CamStreamSocketManager.process[ctrl_id][cmr_id][q]) {
-        try {
-          CamStreamSocketManager.notifyState(direction, false, 'isConfiguring');
-          CamStreamSocketManager.notifyState(direction, true, 'isLoading');
-          CamStreamSocketManager.notifyState(direction, false, 'isSuccess');
-          CamStreamSocketManager.notifyState(direction, false, 'isError');
+        vmsLogger.info(`[DEBUG] Ejecutando comando: ${ffmpegPath} ${ffmpegArgs.join(' ')}`);
 
-          const cameraFound = NodoCameraMapManager.getCamera(ctrl_id, cmr_id);
-          if (cameraFound === undefined) {
-            throw new Error('Camara no encontrada');
-          }
+        const newFfmpegProcess = spawn(ffmpegPath, ffmpegArgs, {
+            stdio: ['ignore', 'pipe', 'ignore'], // Se restaura stdio para silenciar el log de progreso.
+            windowsHide: true
+        });
 
-          const newFfmpegArg = await getFfmpegArgs(ctrl_id, cameraFound.cmr_id, q);
+        newFfmpegProcess.stdout.on('data', (data: Buffer) => {
+            const processData = CamStreamSocketManager.process[ctrl_id]?.[cmr_id]?.[q];
+            if (processData) {
+                CamStreamSocketManager.notifyState(direction, false, 'isLoading');
+                CamStreamSocketManager.notifyState(direction, true, 'isSuccess');
+                
+                // Lógica para ensamblar y enviar los frames de video
+                const isMarkStart = verifyImageMarkers(data, 'start');
+                const isMarkEnd = verifyImageMarkers(data, 'end');
 
-          const newFfmpegProcess = spawn('ffmpeg', newFfmpegArg, { stdio: ['ignore', 'pipe', 'ignore'], windowsHide: true });
-
-          CamStreamSocketManager.process[ctrl_id][cmr_id][q] = {
-            ffmpegProcess: newFfmpegProcess,
-            isChunkInFrame: false,
-            bufferFrame: Buffer.alloc(0),
-          };
-        } catch (error) {
-          // console.error(error)
-          if (error instanceof CustomError || error instanceof Error) {
-            CamStreamSocketManager.notifyState(direction, false, 'isLoading');
-            CamStreamSocketManager.notifyState(direction, true, 'isError');
-            CamStreamSocketManager.notifyError(direction, error.message);
-
-            return;
-          }
-
-          CamStreamSocketManager.notifyState(direction, false, 'isLoading');
-          CamStreamSocketManager.notifyState(direction, true, 'isError');
-          CamStreamSocketManager.notifyError(direction, 'Se ha producido un error inesperado al intentar obtener el stream.');
-
-          return;
-        }
-      }
-
-      // Redirigir la salida de ffmpeg al cliente Socket.IO
-      CamStreamSocketManager.process[ctrl_id][cmr_id][q].ffmpegProcess.stdout.on('data', (data: Buffer) => {
-        if (CamStreamSocketManager.process[ctrl_id][cmr_id][q]) {
-          CamStreamSocketManager.notifyState(direction, false, 'isConfiguring');
-          CamStreamSocketManager.notifyState(direction, false, 'isLoading');
-          CamStreamSocketManager.notifyState(direction, true, 'isSuccess');
-
-          // Verificar marcadores
-          const isMarkStart = verifyImageMarkers(data, 'start');
-          const isMarkEnd = verifyImageMarkers(data, 'end');
-
-          if (!CamStreamSocketManager.process[ctrl_id][cmr_id][q].isChunkInFrame && isMarkStart) {
-            // Si no estamos dentro de una imagen y se encuentra el marcador de inicio
-            CamStreamSocketManager.process[ctrl_id][cmr_id][q].isChunkInFrame = true;
-          }
-
-          if (CamStreamSocketManager.process[ctrl_id][cmr_id][q].isChunkInFrame) {
-            // Concatenar nuevos datos al buffer existente
-
-            CamStreamSocketManager.process[ctrl_id][cmr_id][q].bufferFrame = Buffer.concat([CamStreamSocketManager.process[ctrl_id][cmr_id][q].bufferFrame, data]);
-
-            if (verifyImageMarkers(CamStreamSocketManager.process[ctrl_id][cmr_id][q].bufferFrame, 'complete')) {
-              //Imagen completa
-              const imageBase64 = createImageBase64(CamStreamSocketManager.process[ctrl_id][cmr_id][q].bufferFrame);
-              CamStreamSocketManager.notifyFlux(direction, imageBase64); // Emitir datos al cliente a través de Socket.IO
+                if (!processData.isChunkInFrame && isMarkStart) {
+                    processData.isChunkInFrame = true;
+                }
+                if (processData.isChunkInFrame) {
+                    processData.bufferFrame = Buffer.concat([processData.bufferFrame, data]);
+                    if (verifyImageMarkers(processData.bufferFrame, 'complete')) {
+                        const imageBase64 = createImageBase64(processData.bufferFrame);
+                        CamStreamSocketManager.notifyFlux(direction, imageBase64);
+                        processData.bufferFrame = Buffer.alloc(0); // Limpiar buffer después de enviar
+                        processData.isChunkInFrame = false;
+                    }
+                }
+                if (isMarkEnd) { // Si llega un 'end' sin un 'start', limpiamos por si acaso.
+                    processData.bufferFrame = Buffer.alloc(0);
+                    processData.isChunkInFrame = false;
+                }
             }
-          }
+        });
 
-          if (isMarkEnd) {
-            // Limpiar el búfer para la siguiente imagen
-            CamStreamSocketManager.process[ctrl_id][cmr_id][q].bufferFrame = Buffer.alloc(0);
-            CamStreamSocketManager.process[ctrl_id][cmr_id][q].isChunkInFrame = false;
-          }
-        }
-      });
-
-      CamStreamSocketManager.process[ctrl_id][cmr_id][q].ffmpegProcess.on('close', (code, signal) => {
-        vmsLogger.info(`Camera Stream Manager | Proceso ffmpeg cerrado con código ${code} y señal ${signal}`, direction);
-
-        const currentProcess = CamStreamSocketManager.process[ctrl_id][cmr_id][q];
-        if (currentProcess) {
-          // delete observer
-          // CamStreamSocketManager.unregisterObserver({ctrl_id,ip,q})
-          if (currentProcess.ffmpegProcess && currentProcess.ffmpegProcess.pid !== undefined) {
-            try {
-              currentProcess.ffmpegProcess.kill();
-            } catch (error) {
-              vmsLogger.error(`Camera Stream Manager | createProccess | Error kill process | ${JSON.stringify(direction)} `, error);
+        newFfmpegProcess.on('close', (code, signal) => {
+            vmsLogger.info(`[FFMPEG ON CLOSE]: Proceso cerrado. Código: ${code}, Señal: ${signal}`);
+            // Limpiar el proceso del mapa para que pueda ser recreado.
+            if (CamStreamSocketManager.process[ctrl_id]?.[cmr_id]?.[q]) {
+                delete CamStreamSocketManager.process[ctrl_id][cmr_id][q];
             }
-          }
-
-          delete CamStreamSocketManager.process[ctrl_id][cmr_id][q];
-          if (code !== null) {
             CamStreamSocketManager.notifyState(direction, false, 'isSuccess');
             CamStreamSocketManager.notifyState(direction, false, 'isLoading');
             CamStreamSocketManager.notifyState(direction, true, 'isError');
-            CamStreamSocketManager.notifyError(direction, ` Camara ${cmr_id} | Error al consumir flujo.`);
-          }
+            CamStreamSocketManager.notifyError(direction, `Stream de cámara ${cmr_id} detenido.`);
+        });
+
+        newFfmpegProcess.on('error', (err) => {
+            vmsLogger.error(`[FFMPEG ON ERROR]: Proceso falló al iniciar. Error: ${err.message}`);
+        });
+        
+        // Se asegura que los objetos anidados existan antes de asignar el proceso
+        if (!CamStreamSocketManager.process[ctrl_id]) {
+            CamStreamSocketManager.process[ctrl_id] = {};
         }
-      });
-    }, 100);
-  }
+        if (!CamStreamSocketManager.process[ctrl_id][cmr_id]) {
+            CamStreamSocketManager.process[ctrl_id][cmr_id] = {};
+        }
+
+        // Se guarda el proceso en el mapa
+        CamStreamSocketManager.process[ctrl_id][cmr_id][q] = {
+            ffmpegProcess: newFfmpegProcess,
+            isChunkInFrame: false,
+            bufferFrame: Buffer.alloc(0),
+        };
+
+    } catch (error: any) {
+        vmsLogger.error(`Error al crear proceso FFmpeg para [${ctrl_id}][${cmr_id}][${q}]: ${error.message}`);
+        CamStreamSocketManager.notifyState(direction, false, 'isLoading');
+        CamStreamSocketManager.notifyState(direction, true, 'isError');
+        CamStreamSocketManager.notifyError(direction, 'Error al iniciar el stream.');
+    }
+}
 
   static killProcess(direction: CamStreamDirection) {
     const { ctrl_id, cmr_id, q } = direction;
