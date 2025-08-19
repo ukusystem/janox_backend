@@ -1,4 +1,5 @@
 import { RowDataPacket } from 'mysql2';
+import { decrypt } from '../../utils/decrypt';
 import { NodoCameraMapManager } from '../maps/nodo.camera';
 import { MySQL2 } from '../../database/mysql';
 import { Camara, Controlador, Marca, TipoCamara } from '../../types/db';

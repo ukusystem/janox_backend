@@ -24,7 +24,7 @@ import { dashboardRouter } from '../routes/dashboard.routes';
 import { appConfig } from '../configs';
 import { CameraMotionManager } from './camera';
 import { NodoCameraMapManager } from './maps/nodo.camera';
-import { NvrManager } from './nvr/nvr.manager';
+import { NvrManager } from './nvr';
 import { genericLogger } from '../services/loggers';
 import { RegistroEntradaManager } from '../controllers/socket/registro.entrada';
 import { TokenManger } from './token.manager';

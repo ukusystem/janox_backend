@@ -5,7 +5,7 @@ import { Camara } from '../../types/db';
 import { CameraMotionManager } from '../camera';
 import { CameraOnvifManager } from '../camera/onvif/camera.onvif.manager';
 import { ControllerMapManager } from '../maps';
-import { NvrManager } from '../nvr/nvr.manager';
+import { NvrManager } from '../nvr';
 
 export class CameraNotifyManager {
   static #notifyUpdateToAlarm(ctrl_id: number, curCam: Camara, fieldsUpdate: Partial<Camara>) {
