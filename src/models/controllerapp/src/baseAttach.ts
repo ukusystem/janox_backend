@@ -2716,31 +2716,64 @@ export class ManagerAttach extends BaseAttach {
    * @returns True if the database was created, false if an error occurred.
    */
   private async createDatabaseForNode(nodeID: number): Promise<boolean> {
-    /**
-     * Try to create a database.
-     */
-    if (Main.isWindows) {
-      const dbRes = await executeQuery<ResultSetHeader>(BaseAttach.formatQueryWithNode(queries.createDatabase, nodeID));
-      if (!dbRes) {
-        return false;
+	  /**
+   * Try to create a database.
+   */
+  // Paso 1: Crear la nueva base de datos si no existe. Esto funciona en ambos SO.
+  const newNode = BaseAttach.getNodeDBName(nodeID);
+  try {
+    await executeQuery<ResultSetHeader>(`CREATE DATABASE IF NOT EXISTS ${newNode}`);
+  } catch(e) {
+    this._log(`ERROR: Could not create database schema for node ID ${nodeID}. Error:\n ${e}.`);
+    return false;
+  }
+
+  // Paso 2: Clonar la BD 'nodo' a la nueva BD usando un método multiplataforma.
+  return new Promise<boolean>((resolve) => {
+    const mysqldump = cp.spawn('mysqldump', [
+      `-u${appConfig.db.user}`,
+      `-p${appConfig.db.password}`,
+      '--protocol=TCP',
+      `-P${appConfig.db.port}`,
+      'nodo', // Base de datos de origen (plantilla)
+    ]);
+
+    const mysql = cp.spawn('mysql', [
+      `-u${appConfig.db.user}`,
+      `-p${appConfig.db.password}`,
+      '--protocol=TCP',
+      `-P${appConfig.db.port}`,
+      newNode, // Base de datos de destino
+    ]);
+
+    // Redirige la salida de mysqldump a la entrada de mysql (equivalente al pipe '|')
+    mysqldump.stdout.pipe(mysql.stdin);
+
+    let errorOutput = '';
+    mysqldump.stderr.on('data', (data) => (errorOutput += data.toString()));
+    mysql.stderr.on('data', (data) => (errorOutput += data.toString()));
+
+    mysql.on('close', (code) => {
+      if (code === 0) {
+        this._log(`Database for node ID ${nodeID} created and cloned successfully.`);
+        resolve(true);
+      } else {
+        this._log(`ERROR: Database cloning failed for node ID ${nodeID} with code ${code}. Error:\n ${errorOutput}`);
+        resolve(false);
       }
-      const newNode = BaseAttach.getNodeDBName(nodeID);
-      // The timeout generates an error in the callback?
-      try {
-        cp.execSync(
-          `cmd.exe /c mysqldump -u ${appConfig.db.user} -p${appConfig.db.password} --protocol=TCP -P ${appConfig.db.port} nodo | mysql -u ${appConfig.db.user} -p${appConfig.db.password} --protocol=TCP -P ${appConfig.db.port} ${newNode}`,
-          // mysqldump -u root -padmin --protocol=TCP -P 3307 nodo | mysql -u root -padmin --protocol=TCP -P 3307 nodo1
-          { timeout: BaseAttach.PROCESS_TIMEOUT },
-        );
-      } catch (e) {
-        this._log(`ERROR: Could not create database for node ID ${nodeID}. Error:\n ${e}.`);
-        return false;
-      }
-    } else {
-      this._log(`Database creation only implemented for Windows.`);
-      return false;
-    }
-    return true;
+    });
+
+    mysqldump.on('error', (err) => {
+      this._log(`ERROR: Failed to start mysqldump for node ID ${nodeID}. Error:\n ${err.message}`);
+      resolve(false);
+    });
+
+    mysql.on('error', (err) => {
+      this._log(`ERROR: Failed to start mysql for node ID ${nodeID}. Error:\n ${err.message}`);
+      resolve(false);
+    });
+  });
+
   }
 
   /**

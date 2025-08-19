@@ -1,4 +1,5 @@
 import { RowDataPacket } from 'mysql2';
+import { NodoCameraMapManager } from '../maps/nodo.camera';
 import { MySQL2 } from '../../database/mysql';
 import { Camara, Controlador, Marca, TipoCamara } from '../../types/db';
 import { handleErrorWithArgument, handleErrorWithoutArgument } from '../../utils/simpleErrorHandler';
@@ -37,8 +38,41 @@ type CamResponse = Record<
 >;
 
 export class Camera {
-  static snapshotCapture = async ({ ctrl_id, cmr_id }: CamIdentifier): Promise<Buffer> => {
-    const [mainRtsp] = await getRstpLinksByCtrlIdAndCmrId(ctrl_id, cmr_id);
+	static #snapshotViaHttp = (ip: string, user: string, pass: string): Promise<Buffer> => {
+		// Se intenta obtener la captura por HTTP, un método mucho más rápido.
+		return new Promise(async (resolve, reject) => {
+			const snapshotUrl = `http://${ip}/cgi-bin/snapshot.cgi?user=${user}&pwd=${pass}`;
+			try {
+				const response = await fetch(snapshotUrl);
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				const arrayBuffer = await response.arrayBuffer();
+				resolve(Buffer.from(arrayBuffer));
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
+
+	static snapshotCapture = async ({ ctrl_id, cmr_id }: CamIdentifier): Promise<Buffer> => {
+		const camara = NodoCameraMapManager.getCamera(ctrl_id, cmr_id);
+		if (!camara) {
+			throw new CustomError(`Cámara ${cmr_id} en nodo ${ctrl_id} no encontrada.`, 404, 'Not Found');
+		}
+
+		// Intento 1: Obtener snapshot por HTTP (muy eficiente).
+		try {
+			const password = decrypt(camara.contraseña);
+			const buffer = await Camera.#snapshotViaHttp(camara.ip, camara.usuario, password);
+			cameraLogger.info(`Snapshot por HTTP exitoso para cámara ${camara.ip}`);
+			return buffer;
+		} catch (error) {
+			cameraLogger.warn(`Falló el snapshot por HTTP para ${camara.ip}, usando FFmpeg como respaldo.`, error);
+		}
+
+		// Intento 2: Fallback a FFmpeg (uso intensivo de recursos).
+		const [mainRtsp] = await getRstpLinksByCtrlIdAndCmrId(ctrl_id, cmr_id);
 
     return new Promise((resolve, reject) => {
       if (mainRtsp !== null) {

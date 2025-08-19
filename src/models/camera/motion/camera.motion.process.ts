@@ -84,9 +84,12 @@ export class CameraMotionProcess implements CameraMotionProps, CameraMotionMetho
   snapshotRecord(rtspUrl: string) {
     if (this.ffmpegProcess === undefined) {
       try {
-        const baseSnapshotDir = createMotionDetectionFolders(`./deteccionmovimiento/img/nodo${this.ctrl_id}/camara${this.cmr_id}`);
+        const snapshotPath = path.join('deteccionmovimiento', 'img', `nodo${this.ctrl_id}`, `camara${this.cmr_id}`); // Se usa path.join para crear una ruta segura.
+        const baseSnapshotDir = createMotionDetectionFolders(snapshotPath);
 
-        const baseRecordDir = createMotionDetectionFolders(`./deteccionmovimiento/vid/nodo${this.ctrl_id}/camara${this.cmr_id}`);
+        const recordPath = path.join('deteccionmovimiento', 'vid', `nodo${this.ctrl_id}`, `camara${this.cmr_id}`); // Se usa path.join para crear una ruta segura.
+        const baseRecordDir = createMotionDetectionFolders(recordPath);
+
         const recordFile = `record_${Date.now()}.mp4`;
         const ffmpegArgs = getMotionFfmegArgs(rtspUrl, this.ctrl_id, { baseSnapshotDir: baseSnapshotDir.split(path.sep).join(path.posix.sep), baseRecordDir: baseRecordDir.split(path.sep).join(path.posix.sep), recordFile: recordFile });
 

@@ -60,13 +60,12 @@ export class PersonalController {
     // move file
     fs.renameSync(file.path, movePath);
 
-    const relativePath = path.relative(`${PersonalController.BASE_PROFILEPHOTO_RELATIVE_DIR}`, movePath); // photos\41862f90-7f8f-4c89-bae6-a45c74700b68.jpeg
+  	const relativePath = path.relative(PersonalController.BASE_PROFILEPHOTO_RELATIVE_DIR, movePath);
+  	const posixPath = relativePath.split(path.sep).join(path.posix.sep); // Se normaliza la ruta a formato POSIX (con /) para consistencia en la BD y URLs.
+ 	console.log('Moving file to:', movePath);
+  	console.log('Moving file to relative:', posixPath);
 
-    const finalRelativePath = relativePath.split(path.sep).join(path.posix.sep); // photos/41862f90-7f8f-4c89-bae6-a45c74700b68.jpeg
-    console.log('Moving file to:', movePath);
-    console.log('Moving file to relative:', finalRelativePath);
-
-    return finalRelativePath;
+ 	return posixPath;
   }
 
   #copyDefaultPhoto(): string {

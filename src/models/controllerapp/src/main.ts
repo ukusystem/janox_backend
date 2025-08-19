@@ -1031,25 +1031,19 @@ export class Main {
       else if (tempCamera.camara.conectado === 0) {
         try {
           // Send ping or try to reach address
-          if (Main.isWindows) {
-            cp.exec(`ping ${tempCamera.camara.ip} -n 1`, { timeout: Main.ALIVE_CAMERA_PING_TIMEOUT_MS }, async (error, stdout, _stderror) => {
-              if (error) {
-                // this.log(`Error sending ping to ${cam.cameraIP}. Code ${error.code}`);
-                // this.log(`Error output\n ${stderror}\nStdout\n${stdout}`)
-              } else {
-                const res = stdout.includes('TTL');
-                // this.log(`Output\n${ res}`);
-                if (res) {
-                  // cam.setAlive();
+            const pingCommand = Main.isWindows ? `ping ${tempCamera.camara.ip} -n 1` : `ping ${tempCamera.camara.ip} -c 1`; // Se elige el comando ping según el SO.
+            cp.exec(pingCommand, { timeout: Main.ALIVE_CAMERA_PING_TIMEOUT_MS }, async (error, stdout, _stderror) => {
+              if (!error) {
+                // La respuesta exitosa de ping incluye 'TTL' en Windows y 'ttl' en Linux.
+                const isAlive = stdout.toLowerCase().includes('ttl='); 
+                if (isAlive) {
                   await this.registerCameraEvent(true, tempCamera);
                   NodoCameraMapManager.update(tempCamera.nodeID, tempCamera.camara.cmr_id, { conectado: 1 });
                   this.cameras.splice(i, 1);
                 }
               }
             });
-          } else {
-            this.log(`Ping only implemented for Windows`);
-          }
+
           tempCamera.errorNotified = false;
         } catch (e) {
           if (!tempCamera.errorNotified) {
