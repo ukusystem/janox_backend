@@ -2,7 +2,7 @@ node_modules
 crtssl
 build
 deteccionmovimiento
-nvr
+
 archivos
 package-lock.json
 .env
