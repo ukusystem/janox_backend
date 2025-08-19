@@ -30,9 +30,9 @@ export const getFfmpegArgs = async (ctrl_id: number, cmr_id: number, q: Calidad)
         `scale=${resolution.stream_pri.ancho}:${resolution.stream_pri.altura}`,
         '-c:v',
         'mjpeg', // El único códec de salida debe ser mjpeg para el pipe de imágenes.  
-	'-f',
+	      '-f',
         'image2pipe',
-        '-',
+        'pipe:1',
       ];
     }
     if (q === 'q2') {
@@ -50,9 +50,9 @@ export const getFfmpegArgs = async (ctrl_id: number, cmr_id: number, q: Calidad)
         `scale=${resolution.stream_pri.ancho}:${resolution.stream_pri.altura}`,
         '-c:v',
         'mjpeg', // El único códec de salida debe ser mjpeg para el pipe de imágenes.  
-	'-f',
+	      '-f',
         'image2pipe',
-        '-',
+        'pipe:1',
       ];
     }
     if (q === 'q3') {
@@ -71,7 +71,7 @@ export const getFfmpegArgs = async (ctrl_id: number, cmr_id: number, q: Calidad)
         // "-c:v", "mjpeg",
         '-f',
         'image2pipe',
-        '-',
+        'pipe:1',
       ];
     }
     return ffmpegArg;

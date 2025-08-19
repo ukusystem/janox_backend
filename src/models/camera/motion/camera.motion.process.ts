@@ -488,7 +488,7 @@ const getMotionFfmegArgs = (rtspUrl: string, ctrl_id: number, configs: { baseRec
     resolution: { motion_snapshot, motion_record },
   } = ctrlConfig;
 
-  const result: string[] = ['-rtsp_transport', 'tcp', '-timeout', `${TIMEOUT_DISCONNECT * 1000000}`, '-i', `${rtspUrl}`];
+  const result: string[] = ['-rtsp_transport', 'tcp', '-i', `${rtspUrl}`];
 
   if (appConfig.system.start_record_motion) {
     const recordPath = path.join(configs.baseRecordDir, configs.recordFile);
