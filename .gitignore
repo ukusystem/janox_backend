@@ -1,0 +1,35 @@
+node_modules
+crtssl
+build
+deteccionmovimiento
+nvr
+archivos
+package-lock.json
+.env
+public/firebase-messaging-sw.js
+git-extras
+
+firmware/*
+logs
+# Include only the default worker's photo
+photos/*
+!photos/registered
+photos/registered/*
+!photos/registered/foto1.png
+!photos/registered/foto2.png
+!photos/registered/foto3.png
+!photos/registered/foto4.png
+
+dist
+dist-ssr
+*.local
+# Editor directories and files
+# .vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

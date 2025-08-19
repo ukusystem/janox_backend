@@ -1,0 +1,802 @@
+[
+  {
+    "ID": 1,
+    "Serial": 10134776,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": true,
+    "IsDisabled": false
+  },
+  {
+    "ID": 2,
+    "Serial": 9183763,
+    "WorkerID": 2,
+    "TypeID": 1,
+    "IsAdmin": true,
+    "IsDisabled": false
+  },
+  {
+    "ID": 3,
+    "Serial": 10080853,
+    "WorkerID": 3,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": false
+  },
+  {
+    "ID": 4,
+    "Serial": 10081840,
+    "WorkerID": 4,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": false
+  },
+  {
+    "ID": 5,
+    "Serial": 10093924,
+    "WorkerID": 5,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": false
+  },
+  {
+    "ID": 6,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 7,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 8,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 9,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 10,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 11,
+    "Serial": 12345678,
+    "WorkerID": 2,
+    "TypeID": 3,
+    "IsAdmin": true,
+    "IsDisabled": true
+  },
+  {
+    "ID": 12,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 13,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 14,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 15,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 16,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 17,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 18,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 19,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 20,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 21,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 22,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 23,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 24,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 25,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 26,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 27,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 28,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 29,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 30,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 31,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 32,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 33,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 34,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 35,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 36,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 37,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 38,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 39,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 40,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 41,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 42,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 43,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 44,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 45,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 46,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 47,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 48,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 49,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 50,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 51,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 52,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 53,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 54,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 55,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 56,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 57,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 58,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 59,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 60,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 61,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 62,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 63,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 64,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 65,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 66,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 67,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 68,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 69,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 70,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 71,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 72,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 73,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 74,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 75,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 76,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 77,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 78,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 79,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 80,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 81,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 82,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 83,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 84,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 85,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 86,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 87,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 88,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 89,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 90,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 91,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 92,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 93,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 94,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 95,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 96,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 97,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 98,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 99,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  },
+  {
+    "ID": 100,
+    "Serial": 1,
+    "WorkerID": 1,
+    "TypeID": 1,
+    "IsAdmin": false,
+    "IsDisabled": true
+  }
+]
