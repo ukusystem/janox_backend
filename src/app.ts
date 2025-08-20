@@ -11,10 +11,12 @@ import { SystemManager } from './models/system';
 
     // Crear un servidor
     const server = new ServerApp();
-    // Inicializar websockets
-    server.websocket();
+
+ 
     // Init Maps
     await server.initmaps();
+    // Inicializar websockets
+    server.websocket();
 
     // Iniciar dectecion de movimiento
     if (process.env.START_SNAPSHOT_MOTION === 'true' || process.env.START_RECORD_MOTION === 'true') {
