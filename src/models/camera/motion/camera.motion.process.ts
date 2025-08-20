@@ -473,33 +473,55 @@ export class CameraMotionProcess implements CameraMotionProps, CameraMotionMetho
 }
 
 const getMotionFfmegArgs = (rtspUrl: string, ctrl_id: number, configs: { baseRecordDir: string; recordFile: string; baseSnapshotDir: string }): string[] => {
-  const ctrlConfig = ControllerMapManager.getControllerAndResolution(ctrl_id);
-  if (ctrlConfig === undefined) {
-    throw new Error(`Error getMotionFfmegArgs | Controlador ${ctrl_id} no encontrado getControllerAndResolution`);
-  }
+    const ctrlConfig = ControllerMapManager.getControllerAndResolution(ctrl_id);
+    if (ctrlConfig === undefined) {
+        throw new Error(`Error getMotionFfmegArgs | Controlador ${ctrl_id} no encontrado`);
+    }
 
-  const isMotionDetection = appConfig.system.start_record_motion || appConfig.system.start_snapshot_motion;
-  if (!isMotionDetection) {
-    throw new Error(`Error getMotionFfmegArgs | Motion detection disabled.`);
-  }
+    const { controller, resolution: { motion_snapshot, motion_record } } = ctrlConfig;
+    const doRecord = appConfig.system.start_record_motion;
+    const doSnapshot = appConfig.system.start_snapshot_motion;
 
-  const {
-    controller,
-    resolution: { motion_snapshot, motion_record },
-  } = ctrlConfig;
+    if (!doRecord && !doSnapshot) {
+        throw new Error(`Error getMotionFfmegArgs | Motion detection disabled.`);
+    }
 
-  const result: string[] = ['-rtsp_transport', 'tcp', '-i', `${rtspUrl}`];
+    // Se calcula la duración máxima para que el proceso FFmpeg cubra ambas tareas.
+    const duration = Math.max(
+        doRecord ? controller.motionrecordseconds : 0,
+        doSnapshot ? controller.motionsnapshotseconds : 0
+    );
 
-  if (appConfig.system.start_record_motion) {
-    const recordPath = path.join(configs.baseRecordDir, configs.recordFile);
-    result.push(...['-t', `${controller.motionrecordseconds}`, '-c:v', 'libx264', '-preset', 'ultrafast', '-r', `${controller.motionrecordfps}`, '-an', '-vf', `scale=${motion_record.ancho}:${motion_record.altura}`, `${recordPath}`]);
-  }
+    const result: string[] = [
+        '-rtsp_transport', 'tcp',
+        '-i', rtspUrl,
+        '-t', `${duration}`, // Se añade un único argumento de duración.
+        '-an', // Se elimina el audio una sola vez para ambas salidas.
+    ];
 
-  if (appConfig.system.start_snapshot_motion) {
-    result.push(...['-t', `${controller.motionsnapshotseconds}`, '-an', '-c:v', 'mjpeg', '-vf', `scale=${motion_snapshot.ancho}:${motion_snapshot.altura},select='gte(t\\,0)',fps=1/${controller.motionsnapshotinterval}`, '-strftime', '1', `${configs.baseSnapshotDir}/snapshot_%H_%M_%S.jpg`]);
-  }
+    // Argumentos específicos para la grabación de video
+    if (doRecord) {
+        const recordOutputPath = path.join(configs.baseRecordDir, configs.recordFile);
+        result.push(
+            '-c:v', 'libx264',
+            '-preset', 'ultrafast',
+            '-r', `${controller.motionrecordfps}`,
+            '-vf', `scale=${motion_record.ancho}:${motion_record.altura}`,
+            recordOutputPath
+        );
+    }
 
-  return result;
+    // Argumentos específicos para las capturas de imagen
+    if (doSnapshot) {
+        result.push(
+            '-c:v', 'mjpeg',
+            '-vf', `scale=${motion_snapshot.ancho}:${motion_snapshot.altura},fps=1/${controller.motionsnapshotinterval}`,
+            '-strftime', '1',
+            `${configs.baseSnapshotDir}/snapshot_%H_%M_%S.jpg`
+        );
+    }
+
+    return result;
 };
 
 function createFolderIfNotExists(dir: fs.PathLike) {
@@ -553,7 +575,10 @@ export const insertPathToDB = (relativePath: string, ctrl_id: number, cmr_id: nu
         }
       }
 
-      await MySQL2.executeQuery({ sql: `INSERT INTO ${'nodo' + ctrl_id}.registroarchivocamara (cmr_id , tipo, ruta, thumbnail, fecha) VALUES ( ? ,? , ?, ?, ?)`, values: [cmr_id, tipo, rutaRelativa, thumbnailPathResult, fecha] });
+      await MySQL2.executeQuery({ 
+        sql: `INSERT INTO ${'nodo' + ctrl_id}.registroarchivocamara (cmr_id , tipo, ruta, thumbnail, fecha) VALUES ( ? ,? , ?, ?, ?)`, 
+        values: [cmr_id, tipo, rutaRelativa, thumbnailPathResult, fecha] 
+         });
     } catch (error) {
       cameraLogger.error(`CameraMotionProcess | insertPathToDB | Error al insertar path a la db:\n`, error);
     }
